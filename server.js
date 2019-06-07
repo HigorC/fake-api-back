@@ -2,13 +2,47 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+const redis = require('redis');
+const client = redis.createClient();
+
+app.use(express.json());
+
 const banner = require('./assets/banner.js')
 
 app.get('/itWorks', function (req, res) {
     res.send("Yes, It Works!")
+});
+
+app.get('/api/:rota', (req, res) => {
+    client.get(req.params.rota, (err, result) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        res.send(JSON.parse(result));
+    })
 })
 
-app.listen(port, ()=>{
+app.post('/new/:rota', (req, res) => {
+    client.set(req.params.rota, JSON.stringify(req.body), (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(400).send(`Erro - ${err}`);
+            return;
+        }
+        res.status(203).end();
+    });
+});
+
+app.listen(port, () => {
     console.log(banner);
     console.log(`>> A todo vapor na porta ${port}!\n`);
+
+    client.on('connect', function () {
+        console.log('Cliente Redis conectado!');
+    });
+
+    client.on('erro', function (err) {
+        console.log('Algo deu errado' + err);
+    });
 });
