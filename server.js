@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const redis = require('redis');
-const client = redis.createClient();
+
+// const client = redis.createClient();
+var client = require('redis').createClient(process.env.REDIS_URL);
 
 app.use(express.json());
 
