@@ -11,17 +11,14 @@ const httpStatusCodes = require("../models-generator/http-status-codes");
 // Se for passado na query o parâmetro [requesttime](milisegundos), a requisição só será respondida depois de decorrer este tempo
 router.get('/api/juststatus', (req, res) => {
 
-    if (!req.query.status) {
+    if (!req.query.status)
         req.query.status = httpStatusCodes.getRandomicCode();
-    }
 
-    if (!isNaN(req.query.status)) {
+    if (!isNaN(req.query.status))
         req.query.status = parseInt(req.query.status)
-    }
 
-    if (httpStatusCodes.codes.indexOf(req.query.status) == -1) {
+    if (httpStatusCodes.codes.indexOf(req.query.status) == -1)
         req.query.status = 400;
-    }
 
     if (req.query.requesttime) {
         setTimeout(function () {
