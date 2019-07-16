@@ -35,10 +35,10 @@ router.get('/api/juststatus/allstatus', (req, res) => {
 })
 
 // Responde a requisição com a quantidade de models pedidos
-router.get('/api/models/:model', (req, res) => {
+router.get('/api/models', (req, res) => {
     let response;
 
-    switch (req.params.model) {
+    switch (req.query.model) {
         case "person":
             response = person.createPersons(req.query.size ? req.query.size : 1);
             break;
@@ -49,6 +49,16 @@ router.get('/api/models/:model', (req, res) => {
             res.status(400).end("This model doesn't exists!");
             break;
     }
+
+    res.status(200).send(response);
+})
+
+// Retorna uma lista com todos os modelos pré-feitos
+router.get('/api/models/allmodels', (req, res) => {
+    let response = [
+        { "id": "person", "tipo": "Pessoas" },
+        { "id": "car", "tipo": "Carros" }
+    ];
 
     res.status(200).send(response);
 })
