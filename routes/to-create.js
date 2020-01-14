@@ -14,7 +14,24 @@ router.get('/api/:rota', (req, res) => {
 })
 
 router.post('/new/:rota', (req, res) => {
-    client.set(req.params.rota, JSON.stringify(req.body), (err, result) => {
+    let objList = [];    
+
+    if (!/\d/.test(req.query.quantity)) {
+        req.query.quantity = 1;
+    }
+
+    if (req.query.quantity > 1) {
+        for (let i = 0; i < req.query.quantity; i++) {
+            if (req.query.generateid) {
+                req.body.id = i;
+            }
+            objList.push(req.body);
+        }
+    }
+
+    let jsonToCreate = objList.length || req.body;
+    
+    client.set(req.params.rota, JSON.stringify(jsonToCreate), (err, result) => {
         if (err) {
             console.log(err);
             res.status(400).send(`Erro - ${err}`);
