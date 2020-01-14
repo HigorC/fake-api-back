@@ -22,14 +22,15 @@ router.post('/new/:rota', (req, res) => {
 
     if (req.query.quantity > 1) {
         for (let i = 0; i < req.query.quantity; i++) {
+            let objToPush = Object.assign({}, req.body);
             if (req.query.generateid) {
-                req.body.id = i;
+                objToPush.id = i;
             }
-            objList.push(req.body);
+            objList.push(objToPush);
         }
     }
 
-    let jsonToCreate = objList.length || req.body;
+    let jsonToCreate = objList.length ? objList : req.body;
     
     client.set(req.params.rota, JSON.stringify(jsonToCreate), (err, result) => {
         if (err) {
